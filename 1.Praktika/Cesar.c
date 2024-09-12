@@ -1,105 +1,86 @@
 #include <stdio.h>
 #include <string.h>
-#include <ctype.h>
 
-void print_string (unsigned char a[], int len);
+/* Ejecucion:
+ *      gcc -o bat bat.c
+ *      ./bat > emaitzak.txt
+ * 
+ */
 
+void bihurtu(unsigned char mezua[], int pad, int len){
 
-int len; 
-unsigned char cipher[1000] = "Tfewzuvekzrczkp zj ivjvimzex rlkyfizqvu ivjkiztkzfej fe zewfidrkzfe rttvjj reu uzjtcfjliv, zetcluzex dvrej wfi gifkvtkzex gvijferc gizmrtp reu gifgizvkrip zewfidrkzfe. Zekvxizkp zj xlriuzex rxrzejk zdgifgvi zewfidrkzfe dfuzwztrkzfe fi uvjkiltkzfe, reu zetcluvj vejlizex zewfidrkzfe efe-ivgluzrkzfe reu rlkyvekztzkp. Rmrzcrszczkp zj vejlizex kzdvcp reu ivczrscv rttvjj kf reu ljv fw zewfidrkzfe. ";
-unsigned char dechipher_text [1000];
+    unsigned char deszifratua[1000];
 
-int main() {
- 	
-    char commonWords[MAX_WORDS][MAX_WORD_LENGHT];
-    len = strlen(cipher);
-	print_string(cipher,len);
+    for (int i = 0; i < len; i++){
+        if (mezua[i] != 32 && mezua[i] != 46 && mezua[i] != 44){ //evitar espacios y signos de puntuacion
+            if (mezua[i] < 123 && mezua[i] > 96){ //minusculas
+                if ((mezua[i]+pad) > 96 && (mezua[i]+pad) < 123) 
+                    deszifratua[i] = mezua[i] + pad;
+                else if (mezua[i]+pad < 97)
+                    deszifratua[i] = mezua[i] + pad + 26;
+                else if (mezua[i]+pad > 122)
+                    deszifratua[i] = mezua[i] + pad - 26;
+            } else { //mayusculas
+                if (mezua[i]+pad < 91 && mezua[i]+pad > 64)
+                    deszifratua[i] = mezua[i] + pad;
+                else if (mezua[i]+pad < 65)
+                    deszifratua[i] = mezua[i] + pad + 26;
+                else if (mezua[i]+pad > 90)
+                    deszifratua[i] = mezua[i] + pad - 26;
 
-	int aukerak[5];
-    int kont_aukerak;
-    int passwrd;
-    char* fileName; //ToDO poner este nombre adecuadamente y crear el fitxero: https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-no-swears.txt
-
-    printf("Hitzen fitxategia irakurtzen (&s)", fileName);
-    printf("Desplazamenduak aztertzen:\n\n");
-
-    while (passwrd < 25)
-    {
-        decipher(passwrd);
-        kalk_decipher();
-        passwrd++;
-    }
-
-   	return 0;
-}
-
-void hitzakIrakurri(char *fileName)
-{
-    FILE *artx = fopen(fileName, "r");
-    if(artx == NULL)
-    {
-        printf("Errorea fitxategia irekitzerakoan");
-        return;
-    }
-
-    int i = 0;
-    while(fscan(artx, "%s", commonWords[i]) != EOF  && i < MAX_WORDS)
-    {
-        i++;
+            }            
+        } else {
+            deszifratua[i] = mezua[i];
+        } 
     } 
 
-    fclose(artx);
+    printf("\n");
+
+    for (int i = 0; i < len; i++)
+    {
+        printf("%c", deszifratua[i]);
+    }
+    printf("\n");
 }
 
-void decipher(int passwrd)
-{
-    char a;
-    for(int j = 0; j <= len; j++)
-    {
-        if(isalpha(cipher[j]))
-        {
-            if(isupper(cipher [j]))
-            {
-                a = 'A';
-            }else{
-                a = 'a';
-            }
+void maiztAurkitu(unsigned char mezua[], int len){
+    
+    int maizt[26];
+    int pad;
 
-            dechipher_text[j] = (cipher[j] - a + passwrd) % 26 +a; 
-        }else{
-            dechipher_text [j] = cipher [j];
-        }
+    for (int i = 0; i < 26; i++) maizt[i] = 0;
+
+    for (int i = 0; i < len-1; i++){
+        int letra = mezua[i];
+        if (letra < 91 && letra > 64){
+            maizt[letra-65]++;
+        } else if(letra < 123 && letra > 96){
+            maizt[letra-97]++;
+        }    
     }
+
+    int erabiliena1 = 0;
+
+    for (int i = 0; i < 26; i++){
+        if (maizt[i] > erabiliena1) erabiliena1 = i;
+    }
+
+    for (int i = 0; i < 26; i++){
+        printf("\n");
+        printf("\n%c erabilita\n", i+97);
+        pad = (i+97) - (erabiliena1+97);
+        bihurtu(mezua, pad, len);
+        printf("\n");
+    }      
 }
 
-void kalk_decipher()
-{
-    int probab = 0;
-    char *hitza = strtok(dechipher_text, " ");
+int main(){
 
-    for(int i = 0; i <= len; i++)
-    {
-        for(int j = 0; j < MAX_WORDS; j++)
-        {
-            if(strcm(hitza, commonWords[j]) == 0)
-            {
-                probab++;
-            }
-        }
-    }
+    unsigned char mezua[]="Jypwavnyhwof pz aol kpzjpwspul aoha ltivkplz aol wypujpwslz, tlhuz, huk tlaovkz mvy aol ayhuzmvythapvu vm khah pu vykly av opkl aolpy zlthuapj jvualua, wylclua aolpy buhbaovypglk bzl, vy wylclua aolpy buklaljalk tvkpmpjhapvu.";
+    
+    int len = strlen(mezua);
 
-    if(probab/len >= 0.5)
-    {
-        print_string(dechipher_text, len);
-        printf("Desplazamendua: %d; Segurtasun Portzentaia %d\n", passwrd, probab/len);
-    }
-}
+    maiztAurkitu(mezua, len);
 
-void print_string (unsigned char a[], int len)
-{
-	for (int i=0; i<len; i++)
-	{
-		printf("%c",a[i]);
-	}
-	printf("\n");
+    return 0;
 }
