@@ -20,7 +20,7 @@ int main() {
     int passwrd;
     char* fileName; //ToDO poner este nombre adecuadamente y crear el fitxero: https://github.com/first20hours/google-10000-english/blob/master/google-10000-english-no-swears.txt
 
-    printf("Hitzen fitxategia irakurtzen (&s)", fileName)
+    printf("Hitzen fitxategia irakurtzen (&s)", fileName);
     printf("Desplazamenduak aztertzen:\n\n");
 
     while (passwrd < 25)
