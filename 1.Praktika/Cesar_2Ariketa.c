@@ -57,7 +57,7 @@ void bihurtu(unsigned char mezua[], int pad, int len)
             deszifratua[i] = mezua[i];
         }
     }
-    deszifratua[len] = '\0'; 
+    deszifratua[len] = '\0';
 
     for (int i = 0; i < len; i++)
     {
@@ -101,42 +101,11 @@ void bihurtu(unsigned char mezua[], int pad, int len)
 
 void maiztAurkitu(unsigned char mezua[], int len)
 {
-    
-    int maizt[26] = {0};
-    int pad;
-
-    for (int i = 0; i < len; i++)
-    {
-        int hitz = mezua[i];
-        if (hitz >= 'A' && hitz <= 'Z')
-        {
-            maizt[hitz - 'A']++;
-        }
-        else if (hitz >= 'a' && hitz <= 'z')
-        {
-            maizt[hitz - 'a']++;
-        }
-    }
-
-    int maxFreq = 0;
-    int maxIndex = 0;
-    for (int i = 0; i < 26; i++)
-    {
-        if (maizt[i] > maxFreq)
-        {
-            maxFreq = maizt[i];
-            maxIndex = i;
-        }
-    }
 
     for (int i = 0; i < 26; i++)
     {
-        pad = i - maxIndex;
-        if (pad < 0)
-            pad += 26;
 
-        bihurtu(mezua, pad, len);
-
+        bihurtu(mezua, i, len);
     }
 }
 void print_string(unsigned char a[], int len)
