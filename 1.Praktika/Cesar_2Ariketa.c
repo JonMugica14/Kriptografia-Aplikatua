@@ -63,8 +63,7 @@ void bihurtu(unsigned char mezua[], int pad, int len)
     {
         ema[i] = deszifratua[i];
     }
-
-    char hitzak[MAX_WORDS][MAX_WORD_LENGTH]; // Hitzen arraya
+    char hitzak[MAX_WORDS][MAX_WORD_LENGTH];
 
     fitxategiaAtzitu("1000-most-common-words.txt", hitzak);
     char *word = strtok(deszifratua, " ");
@@ -137,6 +136,7 @@ void maiztAurkitu(unsigned char mezua[], int len)
             pad += 26;
 
         bihurtu(mezua, pad, len);
+
     }
 }
 void print_string(unsigned char a[], int len)
