@@ -63,14 +63,17 @@ int main (void)
     uint8_t bilatu[BLOCK_SIZE], cx[BLOCK_SIZE], px[BLOCK_SIZE];
     int aurkitua = 0;
     for (int i = 0; i < iterations_k2; i++) {
-        for(int j = j; j < iterations_k2; j++)
+        for(int j = 0; j < iterations_k2; j++)
         {
-            des(ENCRYPTION, p1, &table[i*BLOCK_SIZE], key1);
-            if(search_in_blocks(table, iterations_k1, &x))
+            des(DECRYPTION, c1, &bilatu[BLOCK_SIZE], key1);
+            if(search_in_blocks(table, iterations_k2, &bilatu[BLOCK_SIZE]) != -1)
             {
+                printf("Kolizoa aurkitua\n");
+               
                 des(ENCRYPTION, p2, cx, key2);
                 des(DECRYPTION, c2, px, key1);
-                if(px == cx){
+                if(memcmp(px, cx, BLOCK_SIZE) == 0){
+                    
                    aurkitua = 1; 
                 }
             }
