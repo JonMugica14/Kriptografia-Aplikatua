@@ -56,7 +56,7 @@ void bihurtu(unsigned char mezua[], int pad, int len)
         {
             deszifratua[i] = mezua[i];
         }
-    }
+    }   
     deszifratua[len] = '\0';
 
     for (int i = 0; i < len; i++)
