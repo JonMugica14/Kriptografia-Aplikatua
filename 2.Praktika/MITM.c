@@ -43,9 +43,9 @@ int main (void)
 	
     //Hasi
     for (int i = 0; i < iterations_k2; i++) {
-        k_index[i] = i;
         des(ENCRYPTION, p1, &table[i*BLOCK_SIZE], key2);
         key2[0]++;
+        //printf("%p",key2[0]);
     }
 
     sort_blocks(table, k_index, iterations_k2);
@@ -65,11 +65,13 @@ int main (void)
     for (int i = 0; i < iterations_k2; i++) {
         for(int j = 0; j < iterations_k2; j++)
         {
-            des(DECRYPTION, c1, &bilatu[BLOCK_SIZE], key1);
-            if(search_in_blocks(table, iterations_k2, &bilatu[BLOCK_SIZE]) != -1)
+            des(DECRYPTION, c1, bilatu, key1);
+            
+            int lag = search_in_blocks(table, iterations_k2, bilatu);
+            if( lag != -1)
             {
-                printf("Kolizoa aurkitua\n");
-               
+                key2[0] = 0x00;
+                key2[0]+=k_index[lag];
                 des(ENCRYPTION, p2, cx, key2);
                 des(DECRYPTION, c2, px, key1);
                 if(memcmp(px, cx, BLOCK_SIZE) == 0){
@@ -87,16 +89,30 @@ int main (void)
 
     if(aurkitua)
     {
-        printf("La ki enkontrada manin:\n");
-        for (int j = 0; j < BLOCK_SIZE-1; j++){
-            printf("%p", key1[(i*BLOCK_SIZE) + j]);
+
+        printf("Gakoa aurkitu dira\n Key1:\n");
+        for (int j = 0; j < BLOCK_SIZE; j++){
+            printf("%p", key1[j]);
             printf(", ");
         }
-        printf("%p", key1[i * BLOCK_SIZE + (BLOCK_SIZE - 1)]);
-        printf("\n");
+        printf("\nKey2:\n");
+
+        for (int j = 0; j < BLOCK_SIZE; j++){
+            printf("%p", key2[j]);
+            printf(", ");
+        }
+        printf("\nP3 Mezua:\n");
+
+        des(DECRYPTION, c4, bilatu, key1);
+        des(DECRYPTION, bilatu, p4, key2);
+        for (int j = 0; j < BLOCK_SIZE; j++){
+            printf("%c", p4[j]);
+            printf(", ");
+        }        
     }
 
     //Bukatu
+
 
 	finish = clock();
 	time_taken = (double)(finish - start)/(double)CLOCKS_PER_SEC;

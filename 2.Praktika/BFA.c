@@ -34,9 +34,57 @@ int main (void)
 	double time_taken;
 	start = clock();
 	
-	//IMPLEMENT BFA ATTACK
-	//...
-	//...
+	uint8_t middlemsg[BLOCK_SIZE], endmsg[BLOCK_SIZE];
+	int aurkitua = 0;
+    for(int k2_1= 0; k2_1 < iterations_k2; k2_1++)
+    {
+        for(int k1_1 = 0; k1_1 < iterations_k2; k1_1++)
+        {
+            for (int k1_2 = 0; k1_2 < iterations_k2; k1_2++)
+            {
+                des(DECRYPTION, c1, middlemsg, key1);
+				des(DECRYPTION,middlemsg, endmsg, key2);
+				if(memcmp(endmsg, p1, BLOCK_SIZE)==0)
+				{
+					des(DECRYPTION, c2, middlemsg, key1);
+					des(DECRYPTION,middlemsg, endmsg, key2);
+					if(memcmp(endmsg, p2, BLOCK_SIZE)==0)
+					{
+						printf("Gakoa aurkitua\n");
+				        printf("Key1:\n");
+        				for (int j = 0; j < BLOCK_SIZE; j++){
+            				printf("%p", key1[j]);
+            				printf(", ");
+        				}
+						printf("\n");
+        				printf("\nKey2:\n");
+
+        				for (int j = 0; j < BLOCK_SIZE; j++){
+            				printf("%p", key2[j]);
+            				printf(", ");
+        				}
+						printf("\n");
+						des(DECRYPTION, c4, middlemsg, key1);
+        				des(DECRYPTION, middlemsg, p4, key2);
+        				for (int j = 0; j < BLOCK_SIZE; j++){
+           					printf("%c", p4[j]);
+            				printf(", ");
+        				} 		
+						printf("\n");
+						aurkitua = 1;
+					}
+				}
+				if(aurkitua)break;
+				key1[1]++;
+            }
+            if(aurkitua)break;
+			key1[0]++;
+			key1[1]=0x00;
+        }
+		if(aurkitua)break;
+		key2[0]++;
+		key1[0]= 0x00;
+    }
 		
 	finish = clock();
 	time_taken = (double)(finish - start)/(double)CLOCKS_PER_SEC;
