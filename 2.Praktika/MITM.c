@@ -45,23 +45,19 @@ int main (void)
     for (int i = 0; i < iterations_k2; i++) {
         des(ENCRYPTION, p1, &table[i*BLOCK_SIZE], key2);
         key2[0]++;
-        //printf("%p",key2[0]);
     }
 
     sort_blocks(table, k_index, iterations_k2);
 
-    /*for (int i = 0; i < iterations_k2; i++) {
-        for (int j = 0; j < BLOCK_SIZE-1; j++){
-            printf("%p", table[(i*BLOCK_SIZE) + j]);
-            printf(", ");
-        } 
-        printf("%p", table[i * BLOCK_SIZE + (BLOCK_SIZE - 1)]);
-        printf("\n");
-    }*/
+
 
     uint8_t x;
     uint8_t bilatu[BLOCK_SIZE], cx[BLOCK_SIZE], px[BLOCK_SIZE];
     int aurkitua = 0;
+    //Esto se hace para que no haga 0x00 y 0x01 en cada iteracion pk daran el mismo resultado. Leer el README
+	//Haciendo esto hace  0.05 seg mas rapido
+    key1[0]++;
+    key1[1]++;
     for (int i = 0; i < iterations_k2; i++) {
         for(int j = 0; j < iterations_k2; j++)
         {
@@ -95,16 +91,16 @@ int main (void)
             printf("%p", key1[j]);
             printf(", ");
         }
-        printf("\nKey2:\n");
+        printf("\n");
+        printf("Key2:\n");
 
         for (int j = 0; j < BLOCK_SIZE; j++){
             printf("%p", key2[j]);
             printf(", ");
         }
-        printf("\nP3 Mezua:\n");
-
-        des(DECRYPTION, c4, bilatu, key1);
-        des(DECRYPTION, bilatu, p4, key2);
+        printf("\n");
+        printf("P3 Mezua:\n");
+        twodes(DECRYPTION, p4, c4, key1, key2);
         for (int j = 0; j < BLOCK_SIZE; j++){
             printf("%c", p4[j]);
             printf(", ");

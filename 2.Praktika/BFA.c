@@ -36,18 +36,22 @@ int main (void)
 	
 	uint8_t middlemsg[BLOCK_SIZE], endmsg[BLOCK_SIZE];
 	int aurkitua = 0;
-    for(int k2_1= 0; k2_1 < iterations_k2; k2_1++)
+	//Esto se hace para que no haga 0x00 y 0x01 en cada iteracion pk daran el mismo resultado. Leer el README
+	//Haciendo esto hace dos segundo mas rapido
+	key1[0]++;
+	key1[1]++;
+	key2[0]++;
+    for(int k2_1= 1; k2_1 < iterations_k2; k2_1++)
     {
-        for(int k1_1 = 0; k1_1 < iterations_k2; k1_1++)
+        for(int k1_1 = 1; k1_1 < iterations_k2; k1_1++)
         {
-            for (int k1_2 = 0; k1_2 < iterations_k2; k1_2++)
+            for (int k1_2 = 1; k1_2 < iterations_k2; k1_2++)
             {
-                des(DECRYPTION, c1, middlemsg, key1);
-				des(DECRYPTION,middlemsg, endmsg, key2);
+				twodes(DECRYPTION, endmsg, c1, key1, key2);
 				if(memcmp(endmsg, p1, BLOCK_SIZE)==0)
 				{
-					des(DECRYPTION, c2, middlemsg, key1);
-					des(DECRYPTION,middlemsg, endmsg, key2);
+
+					twodes(DECRYPTION, endmsg, c2, key1, key2);
 					if(memcmp(endmsg, p2, BLOCK_SIZE)==0)
 					{
 						printf("Gakoa aurkitua\n");
@@ -64,8 +68,8 @@ int main (void)
             				printf(", ");
         				}
 						printf("\n");
-						des(DECRYPTION, c4, middlemsg, key1);
-        				des(DECRYPTION, middlemsg, p4, key2);
+
+						twodes(DECRYPTION, p4, c4, key1, key2);
         				for (int j = 0; j < BLOCK_SIZE; j++){
            					printf("%c", p4[j]);
             				printf(", ");
