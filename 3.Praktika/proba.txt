@@ -1,0 +1,68 @@
+Ciphertext (hex): 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b1fa32712a1fd8037b482bbc8f3bc523ad5e2e2fd0868
+Plaintext (plen = 39): INTRODUCE NAME IN POSITION 32-47 PLEASE
+Plaintext (plen = 47): INTRODUCE NAME Ip ê+ÓÎïHs&3±<$Ê PLEASE								
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b1fa32712a1f6
+
+Intermediate: 000000000000000000000000000000f4
+Plaintext (plen = 46): INTRODUCE NAME IKa1@R ¥z`oqa:À PLEASE							
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b1fa32712abf7
+
+Intermediate: 0000000000000000000000000000a8f4
+Plaintext (plen = 45): INTRODUCE NAME I«t…[2[kÓýþ=(sìç PLEASE						
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b1fa3271facf0
+
+Intermediate: 000000000000000000000000001ba8f4
+Plaintext (plen = 44): INTRODUCE NAME IÕXrˆØîàEX>ÅšPWË‰ PLEASE					
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b1fa32b1eadf1
+
+Intermediate: 0000000000000000000000002e1ba8f4
+Plaintext (plen = 43): INTRODUCE NAME Iþ~Û@5Ð;Ö,ùÈ# PLEASE				
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b1fac281daef2
+
+Intermediate: 0000000000000000000000aa2e1ba8f4
+Plaintext (plen = 42): INTRODUCE NAME I†§†É¼ÿ¶'§£óG£© PLEASE			
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b11ad291caff3
+
+Intermediate: 0000000000000000000016aa2e1ba8f4
+Plaintext (plen = 41): INTRODUCE NAME ID_í„¤[Ãâ‰Oýki½! PLEASE		
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568a1ea22613a0fc
+
+Intermediate: 0000000000000000008216aa2e1ba8f4
+Plaintext (plen = 40): INTRODUCE NAME IºÛÒ­¯ñÿP„s¤¤‘7ú PLEASE	
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b1fa32712a1fd
+
+Intermediate: 00000000000000005f8216aa2e1ba8f4
+Ez da padding egokia lortzeko C[23] balioa aurkitu
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2d45dd55881ca02411a2fe
+
+Intermediate: 00000000000000d75f8216aa2e1ba8f4
+Ez da padding egokia lortzeko C[22] balioa aurkitu
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229e2dbbdc54891da12510a3ff
+
+Intermediate: 000000000000b0d75f8216aa2e1ba8f4
+Ez da padding egokia lortzeko C[21] balioa aurkitu
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea229ed5bcdb538e1aa62217a4f8
+
+Intermediate: 0000000000d9b0d75f8216aa2e1ba8f4
+Ez da padding egokia lortzeko C[20] balioa aurkitu
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabea2260d4bdda528f1ba72316a5f9
+
+Intermediate: 000000006dd9b0d75f8216aa2e1ba8f4
+Ez da padding egokia lortzeko C[19] balioa aurkitu
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aabeade63d7bed9518c18a42015a6fa
+
+Intermediate: 000000d06dd9b0d75f8216aa2e1ba8f4
+Ez da padding egokia lortzeko C[18] balioa aurkitu
+Probakoa: 60592ff65e192e29a29be678fc8873cd0aab14df62d6bfd8508d19a52114a7fb
+
+Intermediate: 00001bd06dd9b0d75f8216aa2e1ba8f4
+Ez da padding egokia lortzeko C[17] balioa aurkitu
+Probakoa: 60592ff65e192e29a29be678fc8873cd0a4b0bc07dc9a0c74f9206ba3e0bb8e4
+
+Intermediate: 005b1bd06dd9b0d75f8216aa2e1ba8f4
+Ez da padding egokia lortzeko C[16] balioa aurkitu
+Probakoa: 60592ff65e192e29a29be678fc8873cdf44a0ac17cc8a1c64e9307bb3f0ab9e5
+
+Intermediate: e55b1bd06dd9b0d75f8216aa2e1ba8f4
+Ciphertext (hex): 60592ff65e192e29a29be678fc8873cd0aabea229e2d4521568b1fa32712a1fd8037b482bbc8f3bc523ad5e2e2fd0868
+Your name:  PLEASE
