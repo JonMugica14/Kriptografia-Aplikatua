@@ -28,7 +28,7 @@ int main(void)
 	uint8_t *ciphertext = malloc(clen * sizeof(uint8_t));
 	uint8_t *intermediate = malloc(16 * sizeof(uint8_t));
 	uint8_t *probakoa = malloc(clen * sizeof(uint8_t));
-	uint8_t *new_plaintext = malloc(16 * sizeof(uint8_t));
+	//uint8_t *new_plaintext = malloc(16 * sizeof(uint8_t));
 	
 	parse(clen, ciphertext_hex, ciphertext);
 	printf("Ciphertext (hex): ");
@@ -77,7 +77,7 @@ int main(void)
 	}
 
 	// The new plaintext "JON mUGICA" (11 characters, fill the rest with spaces or padding)
-    new_plaintext = "JON mUGICA      ";  // Total 16 bytes
+    uint8_t new_plaintext[16] = { 'I', 'K', 'E', 'R', 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12, 12 };  // Total 16 bytes
 
     // Modify the second-to-last ciphertext block
     // Second-to-last block is located at index 16 to 31 (because block size is 16 bytes)
