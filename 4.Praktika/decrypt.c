@@ -6,6 +6,7 @@
 #include <time.h>
 #include <math.h>
 #include "./tiny_aes/aes.h"
+#include "./libaesni/iaesni.h"
 
 #define BLOCK_SIZE 16
 #define AES_KEY_LENGTH 32
@@ -97,31 +98,55 @@ void search(int64_t n_key_mask, int64_t *key_mask, int64_t n_plaintext_mask, int
     struct AES_ctx ctx;
 
     uint8_t cypher_text_prima[BLOCK_SIZE];
+    int aurk;
+    int index;
+    uint8_t decripted[BLOCK_SIZE];
+    for(int i = 0; i < n_key_mask; i++)
+    {
+        key[key_mask[i]]=0;
+    }
 
-    while (i < aukera && aurkitua == 0) {
+    while (i < aukera && aurkitua == 0)
+    {
 
-        if (a == 255) {
-            a = 0;
-            if (b == 255) {
-                b = 0;
-                if (c == 255) {
-                    c = 0;
-                    d++;
-                } else c++;
-            } else b++;
-        } else a++;
+        aurk = 0;
+        index = n_key_mask-1;
+        
+        while (aurk != 1)
+        {
+            if (key[key_mask[index]] == 255)
+            {
+                key[key_mask[index]] = 0;
+                index--;
+            }
+            else
+            {
+                key[key_mask[index]]++;
+                aurk++;
+            }
+        }
 
-        key[28] = a;
-        key[29] = b;
-        key[30] = c;
-        key[31] = d; 
+        memcpy(cypher_text_prima, cypher_text, BLOCK_SIZE);
 
-        memcpy(cypher_text_prima, cypher_text, BLOCK_SIZE);   
+        #ifdef AESNI
 
+        dec_256_CBC(cypher_text_prima, decripted, key, iv, 1);
+        #else
         AES_init_ctx_iv(&ctx, key, iv);
         AES_CBC_decrypt_buffer(&ctx, cypher_text_prima, BLOCK_SIZE);
+        #endif
 
-        if (0 == memcmp(plain_text, cypher_text_prima, BLOCK_SIZE)) printf("SUCCESS!\n");  
+
+        if (0 == memcmp(plain_text, cypher_text_prima, BLOCK_SIZE))
+        {
+            printf("SUCCESS!\nKey:");
+            for(int i = 0; i < KEY_LENGTH; i++)
+            {
+                printf("%d,", key[i]);
+            }
+        }
+
+        i++;
     }
 }
 
@@ -166,6 +191,4 @@ int main(int argc, char *argv[])
     print_hex(cypher_text, BLOCK_SIZE);
     printf("Key mask length: %ld\n", n_key_mask);
     printf("Plaintext mask length: %ld\n", n_plaintext_mask);
-
-    search(n_key_mask, key_mask, n_plaintext_mask, plaintext_mask, key, plain_text, cypher_text);
 }
