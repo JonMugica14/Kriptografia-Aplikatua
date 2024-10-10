@@ -131,12 +131,19 @@ void search(int64_t n_key_mask, int64_t *key_mask, int64_t n_plaintext_mask, int
         #ifdef AESNI
 
         dec_256_CBC(cypher_text_prima, decripted, key, iv, 1);
+        if (0 == memcmp(plain_text, decripted, BLOCK_SIZE))
+        {
+            printf("SUCCESS!\nKey:");
+            for(int i = 0; i < KEY_LENGTH; i++)
+            {
+                printf("%d,", key[i]);
+            }
+            aurkitua=1;
+        }
         #else
         AES_init_ctx_iv(&ctx, key, iv);
         AES_CBC_decrypt_buffer(&ctx, cypher_text_prima, BLOCK_SIZE);
-        #endif
-
-
+        
         if (0 == memcmp(plain_text, cypher_text_prima, BLOCK_SIZE))
         {
             printf("SUCCESS!\nKey:");
@@ -144,7 +151,11 @@ void search(int64_t n_key_mask, int64_t *key_mask, int64_t n_plaintext_mask, int
             {
                 printf("%d,", key[i]);
             }
+            aurkitua=1;
         }
+        #endif
+
+
 
         i++;
     }
