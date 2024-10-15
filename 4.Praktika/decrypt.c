@@ -90,7 +90,7 @@ uint32_t parse_mask(uint8_t *in, int64_t **key_mask)
 
 void search(int64_t n_key_mask, int64_t *key_mask, int64_t n_plaintext_mask, int64_t *plaintext_mask, uint8_t *key, uint8_t *plain_text, uint8_t *cypher_text)
 {
-    int i = 0, j = 0, aurkitua = 0;
+    int j = 0, aurkitua = 0;
     int a = 0, b = 0, c = 0, d = 0;
 
     double aukera = pow(2, 32);
@@ -101,12 +101,18 @@ void search(int64_t n_key_mask, int64_t *key_mask, int64_t n_plaintext_mask, int
     int aurk;
     int index;
     uint8_t decripted[BLOCK_SIZE];
+    uint8_t gure_key[AES_KEY_LENGTH];
+
+    int lag = 48;
     for(int i = 0; i < n_key_mask; i++)
     {
-        key[key_mask[i]]=0;
+        key[key_mask[i]]=lag;
     }
+    print_hex(key, KEY_LENGTH);
+    printf("\n");
 
-    while (i < aukera && aurkitua == 0)
+    //Gakoaren aukerak 48-57 tartean bi horiek 0-9 balioen ascii balioak direlako. Suposatuz gakoaren azkeneko lau byteak zenbakiak direla. Ez bada gakoa lortzen teklatu osoko balioak konprobatu
+    while (j < aukera && aurkitua == 0)
     {
 
         aurk = 0;
@@ -114,24 +120,32 @@ void search(int64_t n_key_mask, int64_t *key_mask, int64_t n_plaintext_mask, int
         
         while (aurk != 1)
         {
-            if (key[key_mask[index]] == 255)
+            if (key[key_mask[index]] == 58)
             {
-                key[key_mask[index]] = 0;
+                key[key_mask[index]] = lag;
+                print_hex(key, KEY_LENGTH);
                 index--;
+                if(index < 0)
+                {
+                    printf("Gakoa ez da aurkitu, gako posible guztiak probatuta.\n");
+                    aurkitua = 1;
+                    break;
+                }
             }
             else
             {
                 key[key_mask[index]]++;
+                //print_hex(key, KEY_LENGTH);
                 aurk++;
             }
         }
-
+        
         memcpy(cypher_text_prima, cypher_text, BLOCK_SIZE);
 
         #ifdef AESNI
 
         dec_256_CBC(cypher_text_prima, decripted, key, iv, 1);
-        if (0 == memcmp(plain_text, decripted, BLOCK_SIZE))
+        if (0 == memcmp(decripted, plain_text, BLOCK_SIZE))
         {
             printf("SUCCESS!\nKey:");
             for(int i = 0; i < KEY_LENGTH; i++)
@@ -157,7 +171,7 @@ void search(int64_t n_key_mask, int64_t *key_mask, int64_t n_plaintext_mask, int
 
 
 
-        i++;
+        j++;
     }
 }
 

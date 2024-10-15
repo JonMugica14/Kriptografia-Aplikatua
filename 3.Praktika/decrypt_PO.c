@@ -101,7 +101,9 @@ int main(void)
 	//print_hex(ciphertext, clen);
 
 	uint32_t offset = 32;
-	printf("Your name: ");
+	printf("Text:");
+	print_c(plaintext , offset);
+	printf("\nYour name: ");
 	print_c(plaintext + offset, plen - offset);
 
 	free(ciphertext);
