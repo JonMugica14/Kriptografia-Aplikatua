@@ -64,14 +64,15 @@ int main(int argc, char *argv[])
 	
 	//Remove padding
 	int nbytes_P=remove_PCKS7(P, nbytes_C/AES_BLOCKLEN);
-	print_c(P, nbytes_P);
+	//print_c(P, nbytes_P);
   	
 	//Calculate HMAC
 	uint8_t* HMAC_calc=calloc(SHA256_BLOCK_SIZE,sizeof(uint8_t));
 	HMAC_SHA256(key_HMAC, AES_KEYLEN, C, nbytes_C, HMAC_calc);
 	
 	//Compare received and calculated and indicate if the received message is valid/not valid
-	printf("TAG IS VALID!\n");
+	if (memcmp(HMAC_calc, HMAC_rec, sizeof(SHA256_BLOCK_SIZE * sizeof(uint8_t))))print_c(P, nbytes_P);
+	else printf("Jasotako TAG ez da beharrezkoa\n");
 	
 	free(all); free(iv); free(C); free(HMAC_rec); free(P); free(HMAC_calc); free(key_encrypt); free(key_HMAC);
 	
@@ -80,7 +81,43 @@ int main(int argc, char *argv[])
 
 void HMAC_SHA256(uint8_t* key, int nbytes_key, uint8_t* P, int nbytes_P, uint8_t* HMAC)
 {
+	uint8_t *gure_key = calloc(SHA256_INPUT_SIZE, sizeof(uint8_t));
+	BYTE buf[SHA256_BLOCK_SIZE];
+	SHA256_CTX ctx;
+
+	if (nbytes_key > SHA256_INPUT_SIZE) {
+		sha256_init(&ctx);
+		sha256_update(&ctx, key, nbytes_key);
+		sha256_final(&ctx, buf);
+		memcpy(gure_key, buf, SHA256_BLOCK_SIZE * sizeof(uint8_t));
+	} else memcpy(gure_key, key, nbytes_key * sizeof(uint8_t));
 	
+	uint8_t *newIpad = malloc(nbytes_key * nbytes_P * sizeof(uint8_t));
+	uint8_t *newOpad = malloc(nbytes_key * nbytes_P * sizeof(uint8_t));
+	
+	for (int i = 0; i < nbytes_key; i++) {
+		newIpad[i] = key[i] ^ IPAD;
+	}
+
+	memcpy(newIpad + nbytes_key, P, nbytes_P * sizeof(uint8_t));
+
+	sha256_init(&ctx);
+	sha256_update(&ctx, newIpad, nbytes_key + nbytes_P);
+	sha256_final(&ctx, buf);
+
+	for (int i = 0; i < nbytes_key; i++) {
+		newOpad[i] = key[i] ^ OPAD;
+	}
+
+	uint8_t *concatenate = malloc((2 * nbytes_key) + nbytes_P * sizeof(uint8_t));
+	memcpy(concatenate, newOpad, nbytes_key * sizeof(uint8_t));
+	memcpy(concatenate + nbytes_key, buf, nbytes_key + nbytes_P * sizeof(uint8_t));
+
+	sha256_init(&ctx);
+	sha256_update(&ctx, concatenate, 2 * nbytes_key + nbytes_P);
+	sha256_final(&ctx, HMAC);
+
+	free(gure_key); free(newIpad); free(newOpad); free(concatenate);
 }
 
 
