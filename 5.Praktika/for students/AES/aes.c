@@ -887,7 +887,14 @@ int AES_CCM_decrypt(const uint8_t* C, int nbytes_C, const uint8_t* nonce, int nb
 	CCM_formating_B(P, nbytes_P, nonce, nbytes_nonce, A, nbytes_A, nbytes_T, B);
 	
 	//CALCULATE T_calc abd return nbytes_P=0 and an empty P if tag is invalid
-		
+	uint8_t* T_calc = malloc(nbytes_C*sizeof(uint8_t));
+	calculate_tag_AES_CCM(B, nbytes_B/AES_BLOCKLEN, key, T_calc, nbytes_T);
+	if (memcmp(T_calc, T_rec, nbytes_C)!=0)
+	{
+		P=NULL;
+		nbytes_P=0;
+	}
+	
 	free(B); free(iv); free(T_rec); 
 	
 	return(nbytes_P);

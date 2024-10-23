@@ -65,12 +65,15 @@ int main(int argc, char *argv[])
 	int nbytes_P=nbytes_C-nbytes_T;
 	uint8_t* P=calloc(nbytes_P,sizeof(uint8_t));
 	nbytes_P=AES_CCM_decrypt(C, nbytes_C, nonce, nbytes_nonce, key, A, nbytes_A, nbytes_T, P);
+	if(P==NULL&&nbytes_P==0){
+		printf("Tag Invalid");
+	}else print_c(P, nbytes_P);
 	
 	//Print plaintext
-	print_c(P, nbytes_P);
+	
 	
 	//Check if nbytes is 0 and indicate if the received message is valid/not valid
-	printf("TAG IS VALID!\n");
+
 
 	free(all); free(C); free(nonce); free(P); free(key);
 }
