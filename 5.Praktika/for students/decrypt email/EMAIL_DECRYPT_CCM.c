@@ -69,10 +69,7 @@ int main(int argc, char *argv[])
 		printf("Tag Invalid");
 	}else print_c(P, nbytes_P);
 	
-	//Print plaintext
 	
-	
-	//Check if nbytes is 0 and indicate if the received message is valid/not valid
 
 
 	free(all); free(C); free(nonce); free(P); free(key);

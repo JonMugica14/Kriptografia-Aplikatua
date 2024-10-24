@@ -72,7 +72,7 @@ int main(int argc, char *argv[])
 	
 	//Compare received and calculated and indicate if the received message is valid/not valid
 	if (memcmp(HMAC_calc, HMAC_rec, sizeof(SHA256_BLOCK_SIZE * sizeof(uint8_t)))==0)print_c(P, nbytes_P);
-	else printf("Jasotako TAG ez da beharrezkoa\n");
+	else printf("TAG Invalid\n");
 	
 	free(all); free(iv); free(C); free(HMAC_rec); free(P); free(HMAC_calc); free(key_encrypt); free(key_HMAC);
 	

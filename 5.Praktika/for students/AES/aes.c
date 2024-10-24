@@ -683,29 +683,30 @@ int AES_GCM_decrypt(uint8_t* buf, int nbytes_buf, const uint8_t* iv, int nbytes_
 	
 	//Calculate Tag and compare it with received tag return valid=1 if received tag and calculated tag are equal
 	//if tag is not valid set buf to 0
-	 // Calcular GHASH para buf y A
-    uint8_t* S = calloc(AES_BLOCKLEN, sizeof(uint8_t)); 
-    calculate_S(buf, nbytes_buf, A, nbytes_A, H, S);
-    
-    uint8_t* calculated_tag = calloc(AES_BLOCKLEN, sizeof(uint8_t)); 
-    AES_CTR_xcrypt(S, AES_BLOCKLEN, J0, key);
-    memcpy(calculated_tag, S, AES_BLOCKLEN);
-    
-    
-  
-    int valid;
-    if (memcmp(calculated_tag, T, AES_BLOCKLEN) != 0) {
-        
-       valid=0;
-    } else {
-		valid=1;
-        J0[AES_BLOCKLEN-1] += 1;
-        AES_CTR_xcrypt(buf, nbytes_buf, J0, key);
-    }
+	// Calcular GHASH para buf y A
+	uint8_t* S = calloc(AES_BLOCKLEN, sizeof(uint8_t)); 
+	calculate_S(buf, nbytes_buf, A, nbytes_A, H, S);
 
-    // Limpiar memoria
-    free(H); free(J0); free(S); free(calculated_tag);
+	uint8_t* calculated_tag = calloc(AES_BLOCKLEN, sizeof(uint8_t)); 
+	AES_CTR_xcrypt(S, AES_BLOCKLEN, J0, key);
+	memcpy(calculated_tag, S, AES_BLOCKLEN);
+
+
+
+	int valid;
+	if (memcmp(calculated_tag, T, AES_BLOCKLEN) != 0) {
+
+		valid=0;
 	
+	} else {
+		valid=1;
+		J0[AES_BLOCKLEN-1] += 1;
+		AES_CTR_xcrypt(buf, nbytes_buf, J0, key);
+	}
+
+	// Limpiar memoria
+	free(H); free(J0); free(S); free(calculated_tag);
+
 	
 	return valid;
 }

@@ -87,7 +87,7 @@ int main(int argc, char *argv[])
 		printf("TAG IS NOT VALID!\n");
 	else
 	printf("TAG IS VALID!\n");
-	  
+	
 	free(all); free(T); free(C); free(P); free(iv);
 	return(0);
 }
