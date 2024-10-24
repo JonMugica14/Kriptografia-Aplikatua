@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdint.h>
-#include "aes.h"
+#include "tiny_AES/aes.h"
 
 #define BLOCK_SIZE 16
 #define AES_KEY_LENGTH 32

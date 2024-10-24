@@ -186,7 +186,8 @@ int main(int argc, char *argv[])
     int64_t *plaintext_mask;
     uint64_t n_threads, n_threads_sys;
     char *end_ptr;
-
+    struct timespec start, end;
+    double time_spent;
     if (argc != 6 && argc != 7)
     {
         fprintf(stderr, "Usage: %s key key_mask plaintext plaintext_mask cyphertext\n", argv[0]);
@@ -207,7 +208,9 @@ int main(int argc, char *argv[])
     parse(BLOCK_SIZE, argv[3], plain_text);
     n_plaintext_mask = parse_mask(argv[4], &plaintext_mask);
     parse(BLOCK_SIZE, argv[5], cypher_text);
+    clock_gettime(CLOCK_MONOTONIC, &start);
     search(n_key_mask, key_mask, n_plaintext_mask, plaintext_mask, key, plain_text, cypher_text);
+    clock_gettime(CLOCK_MONOTONIC, &end);
     printf("Key: ");
     print_hex(key, AES_KEY_LENGTH);
     printf("Plain text: ");
@@ -216,4 +219,7 @@ int main(int argc, char *argv[])
     print_hex(cypher_text, BLOCK_SIZE);
     printf("Key mask length: %ld\n", n_key_mask);
     printf("Plaintext mask length: %ld\n", n_plaintext_mask);
+    time_spent = (end.tv_sec - start.tv_sec) + (end.tv_nsec - start.tv_nsec) / 1e9;
+
+    printf("Execution time: %f seconds\n", time_spent);
 }

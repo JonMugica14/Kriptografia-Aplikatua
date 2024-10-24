@@ -677,20 +677,35 @@ int AES_GCM_decrypt(uint8_t* buf, int nbytes_buf, const uint8_t* iv, int nbytes_
 	uint8_t* H = calloc(AES_BLOCKLEN, sizeof(uint8_t)); // Initialize H to 0
 	AES_ECB_encrypt(H, 1, key); //Calculate AES_K(0^128)
 	
-	//Calculate J0 dependiendo de la longitud de iv
+	
 	uint8_t* J0=calloc(AES_BLOCKLEN, sizeof(uint8_t)); // Initialize J0 to 0
 	calculate_J0(iv, nbytes_iv, H, J0);
 	
 	//Calculate Tag and compare it with received tag return valid=1 if received tag and calculated tag are equal
 	//if tag is not valid set buf to 0
+	 // Calcular GHASH para buf y A
+    uint8_t* S = calloc(AES_BLOCKLEN, sizeof(uint8_t)); 
+    calculate_S(buf, nbytes_buf, A, nbytes_A, H, S);
+    
+    uint8_t* calculated_tag = calloc(AES_BLOCKLEN, sizeof(uint8_t)); 
+    AES_CTR_xcrypt(S, AES_BLOCKLEN, J0, key);
+    memcpy(calculated_tag, S, AES_BLOCKLEN);
+    
+    
+  
+    int valid;
+    if (memcmp(calculated_tag, T, AES_BLOCKLEN) != 0) {
+        
+       valid=0;
+    } else {
+		valid=1;
+        J0[AES_BLOCKLEN-1] += 1;
+        AES_CTR_xcrypt(buf, nbytes_buf, J0, key);
+    }
+
+    // Limpiar memoria
+    free(H); free(J0); free(S); free(calculated_tag);
 	
-	//DECRYPT buf with CTR (iv=inc32(J0))
-	J0[AES_BLOCKLEN-1] += 1;
-	AES_CTR_xcrypt(buf, nbytes_buf, J0, key);
-	
-	int valid = 1;
-	
-	free(H); free(J0);  
 	
 	return valid;
 }
