@@ -700,6 +700,7 @@ int AES_GCM_decrypt(uint8_t* buf, int nbytes_buf, const uint8_t* iv, int nbytes_
 	
 	} else {
 		valid=1;
+		
 		J0[AES_BLOCKLEN-1] += 1;
 		AES_CTR_xcrypt(buf, nbytes_buf, J0, key);
 	}
