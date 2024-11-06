@@ -121,3 +121,16 @@ class DSA:
         # Compute v and r
                 
         return v == r
+
+    def gakoa_lortu(self, x1, s1, x2, s2, r):
+    
+        h_x1 = int.from_bytes(hashlib.sha1(x1).digest(), 'big')
+        h_x2 = int.from_bytes(hashlib.sha1(x2).digest(), 'big')
+
+     
+        k = ((h_x1 - h_x2) * pow(s1 - s2, -1, self.q)) % self.q
+       
+        d = ((s1 * k - h_x1) * pow(r, -1, self.q)) % self.q
+
+        self.d = d
+        return k, d
