@@ -122,11 +122,14 @@ class DSA:
                 
         return v == r
 
-    def gakoa_lortu(self, x1, s1, x2, s2, r):
-    
-        h_x1 = int.from_bytes(hashlib.sha1(x1).digest(), 'big')
-        h_x2 = int.from_bytes(hashlib.sha1(x2).digest(), 'big')
+    def gakoa_lortu(self m1, m2, signature1, signature2): 
+        h_x1 = int.from_bytes(hashlib.sha1(m1).digest(), 'big')
+        h_x2 = int.from_bytes(hashlib.sha1(m2).digest(), 'big')
 
+        r = siganture1 >> 160
+
+        s1 = signature1 & ((1 << 160) - 1) 
+        s2 = signature2 & ((1 << 160) - 1)
      
         k = ((h_x1 - h_x2) * pow(s1 - s2, -1, self.q)) % self.q
        
