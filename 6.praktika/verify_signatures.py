@@ -9,6 +9,9 @@ SIGNATURES_FILENAME='signatures'
 
 def main():
     dsa = DSA()
+    mezuak = []
+    sinadurak = []
+    gakoa = 0
     dsa.read_publickey(PUBLICKEY_FILENAME)
     filenames, signatures = read_signatures(SIGNATURES_FILENAME)
 
@@ -17,8 +20,19 @@ def main():
             data = f.read()
             if dsa.verify(data, signature):
                 print(f'[{filename}]: Valid signature.')
+                mezuak.append(data)
+                sinadurak.append(signature)
             else:
                 print(f'[{filename}]: Invalid signature.')
+
+    gakoa = dsa.gakoa_lortu(mezuak[1], mezuak[2],sinadurak[1], sinadurak[2])
+    print(gakoa)
+    dsa.d = gakoa
+    signature2 = dsa.sign(mezuak[1])
+    if dsa.verify(mezuak[1], signature2):
+        print('Test valid signature')
+    else:
+        print('Test INvalid signature')
 
 def read_signatures(filename):
     filenames = []

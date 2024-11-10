@@ -136,4 +136,5 @@ class DSA:
         d = ((s1 * k - h_x1) * pow(r, -1, self.q)) % self.q
 
         self.d = d
-        return k, d
+        return d
+        #return k, d
