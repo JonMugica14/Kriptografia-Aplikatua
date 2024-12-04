@@ -71,6 +71,8 @@ int main(int argc, char *argv[])
 
     int tartea;
 
+    float encr_denborak[6];
+    float decr_denborak[6];
 
     float sum_enc = 0, sum_dec = 0;
     for (int j = 0; j < 6; j++)
@@ -109,6 +111,9 @@ int main(int argc, char *argv[])
         if (j == 0) printf("Plaintext %dB izanik: \n", tartea);
         else printf("Plaintext %dKiB izanik: \n", tartea/1024);
 
+        encr_denborak[j] = sum_enc / (atoi(argv[1]) - 100);
+        decr_denborak[j] = sum_dec / (atoi(argv[1]) - 100);
+    
         // Calculate and print the encryption time
         printf("Encryption time = %.3lf us\n", sum_enc / (atoi(argv[1]) - 100));
 
@@ -117,6 +122,13 @@ int main(int argc, char *argv[])
 
         printf("\n");
 
+        if (j != 0) {
+          printf("17B / %dKiB konparaketa:\n", tartea);
+          printf("Azelerazio faktorea enkripzioan: %.3lf\n", (encr_denborak[0] / encr_denborak[j]));
+          printf("Azelerazio faktorea dekripzioan: %.3lf\n", (encr_denborak[0] / encr_denborak[j]));
+          printf("\n");
+        }
+       
         // Check if decryption was successful (result == 0)
         if (result)
         {
