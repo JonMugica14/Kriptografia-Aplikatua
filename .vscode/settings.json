@@ -1,5 +1,10 @@
 {
     "files.associations": {
-        "stdio.h": "c"
+        "*.embeddedhtml": "html",
+        "stdio.h": "c",
+        "printstate.h": "c",
+        "api.h": "c",
+        "ascon.h": "c",
+        "crypto_aead.h": "c"
     }
 }

@@ -25,29 +25,28 @@ int main(int argc, char *argv[])
     struct timespec begin, end; // Structures to store the start and end times for timing
 
     // Define a 16-byte key for encryption, initialized with example values
-    unsigned char key[CRYPTO_KEYBYTES] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+    uint8_t key[CRYPTO_KEYBYTES] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 
     // Define a nonce (initialization vector) of required size for encryption, initialized with example values
-    unsigned char nonce[CRYPTO_NPUBBYTES] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
+    uint8_t nonce[CRYPTO_NPUBBYTES] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
 
     /*
     // Define the plaintext message
     unsigned char plaintext[] = "Your message here"; // 17B, 1KiB ,32KiB ,128KiB ,256KiB , 512KiB
     unsigned long long plaintext_len = strlen((char *)plaintext);
     */
-
+    int result;
     // Define associated data (optional additional data) for authenticated encryption
-    unsigned char associated_data[] = "Optional AD";
-    unsigned long long ad_len = strlen((char *)associated_data);
+    uint8_t associated_data[] = "Optional AD";
+    uint64_t ad_len = strlen((char *)associated_data);
 
     // Allocate memory for the ciphertext with additional bytes for the authentication tag
-    unsigned long long ciphertext_len;
-    unsigned char *ciphertext;
+    uint64_t ciphertext_len;
+    uint8_t *ciphertext;
 
     // Allocate memory for decrypted text
-    unsigned long long decrypted_len;        // Will store the length of decrypted text
-    unsigned char *decrypted; // Allocate memory for decrypted data
-                                                                 // Variable to store the decryption result
+    uint64_t decrypted_len;        // Will store the length of decrypted text
+    uint8_t*decrypted; // Allocate memory for decrypted data
 
     FILE *file = fopen("archivo_512KiB.txt", "rb");
     if (!file)
@@ -56,7 +55,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    unsigned char plaintext[BLOCK_SIZE];
+    uint8_t plaintext[BLOCK_SIZE];
     size_t plaintext_len = fread(plaintext, 1, BLOCK_SIZE, file);
 
     if (plaintext == 0)
@@ -73,6 +72,10 @@ int main(int argc, char *argv[])
 
     float encr_denborak[6];
     float decr_denborak[6];
+    uint8_t *tag;
+    tag = malloc(CRYPTO_ABYTES * sizeof(uint8_t));
+    ciphertext = malloc((BLOCK_SIZE + CRYPTO_ABYTES) * sizeof(uint8_t));
+    decrypted = malloc(BLOCK_SIZE * sizeof(uint8_t));
 
     float sum_enc = 0, sum_dec = 0;
     for (int j = 0; j < 6; j++)
@@ -81,31 +84,40 @@ int main(int argc, char *argv[])
         else {
             tartea = 104857 * j;
         }
-
+       
         ciphertext_len = tartea + CRYPTO_ABYTES;
-        ciphertext = malloc(ciphertext_len * sizeof(unsigned char));
+        
+        ciphertext = realloc(ciphertext, ciphertext_len * sizeof(unsigned char));
         
         decrypted_len = ciphertext_len - CRYPTO_ABYTES;
-        decrypted = malloc(decrypted_len * sizeof(unsigned char));
+        decrypted = realloc(decrypted, decrypted_len * sizeof(unsigned char));
+      
 
         for (int i = 0; i < n; i++)
         {
             // Measure encryption time
             clock_gettime(CLOCK_MONOTONIC_RAW, &begin);                                                                            // 17B, 1KiB, 32KiB, 64KiB, 128KiB, 512KiB                                                                            // Start time for encryption
-            crypto_aead_encrypt(ciphertext, &ciphertext_len, plaintext, tartea, associated_data, ad_len, NULL, nonce, key); // Encrypt the plaintext
+           crypto_aead_encrypt(ciphertext, &ciphertext_len, plaintext, tartea, associated_data, ad_len, NULL, nonce, key); // Encrypt the plaintext
+           
+            
             clock_gettime(CLOCK_MONOTONIC_RAW, &end);                                                                              // End time for encryption
-
+            
             if (i >= 100)
                 sum_enc += (end.tv_nsec - begin.tv_nsec) / 1000.0 + (end.tv_sec - begin.tv_sec) * 1e6;
 
             // Measure decryption time
-            clock_gettime(CLOCK_MONOTONIC_RAW, &begin);                                                                                     // Start time for decryption
-            crypto_aead_decrypt(decrypted, &decrypted_len, NULL, ciphertext, ciphertext_len, associated_data, ad_len, nonce, key); // Decrypt the ciphertext
+            clock_gettime(CLOCK_MONOTONIC_RAW, &begin);                                                                                  // Start time for decryption
+          result=crypto_aead_decrypt(decrypted, &decrypted_len, NULL, ciphertext, ciphertext_len, associated_data, ad_len, nonce, key); // Decrypt the ciphertext
             clock_gettime(CLOCK_MONOTONIC_RAW, &end);                                                                                       // End time for decryption
 
             if (i >= 100)
                 sum_dec += (end.tv_nsec - begin.tv_nsec) / 1000.0 + (end.tv_sec - begin.tv_sec) * 1e6;
+                
+                
         }
+        
+        
+
 
         // Adierazi tartea
         if (j == 0) printf("Plaintext %dB izanik: \n", tartea);
@@ -122,14 +134,16 @@ int main(int argc, char *argv[])
 
         printf("\n");
 
-        
-       
-      
+        if(result != 0) {
+            printf("Errorea dekodifikazioan\n");
+            
+        }
 
         // Free allocated memory
-        free(ciphertext);
-        free(decrypted);
+        
     }
-
+free(ciphertext);
+        free(decrypted);
+        free(tag);
     return 0;
 }

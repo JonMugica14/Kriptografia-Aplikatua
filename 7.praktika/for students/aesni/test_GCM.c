@@ -3,15 +3,16 @@
 #include <stdlib.h>
 #include <time.h>
 #include "api.h"
-#include "ascon.h"
-#include "../ascon-c-main/ascon-c-main/tests/crypto_aead.h"
+
+#include "AESNI_AEAD.h"
+
 
 #define BLOCK_SIZE (512 * 1024) // 512KiB
 
 int main(int argc, char *argv[])
 {
 
-     if (argc < 2)
+    if (argc < 2)
     {
         printf("Sartu parametroa\n");
         return 1;
@@ -29,7 +30,7 @@ int main(int argc, char *argv[])
 
     // Define a nonce (initialization vector) of required size for encryption, initialized with example values
     unsigned char nonce[CRYPTO_NPUBBYTES] = {0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0a, 0x0b, 0x0c, 0x0d, 0x0e, 0x0f};
-
+    int result;
     /*
     // Define the plaintext message
     unsigned char plaintext[] = "Your message here"; // 17B, 1KiB ,32KiB ,128KiB ,256KiB , 512KiB
@@ -92,7 +93,9 @@ int main(int argc, char *argv[])
         {
             // Measure encryption time
             clock_gettime(CLOCK_MONOTONIC_RAW, &begin);                                                                            // 17B, 1KiB, 32KiB, 64KiB, 128KiB, 512KiB                                                                            // Start time for encryption
-            crypto_aead_encrypt(ciphertext, &ciphertext_len, plaintext, tartea, associated_data, ad_len, NULL, nonce, key); // Encrypt the plaintext
+           // crypto_aead_encrypt(ciphertext, &ciphertext_len, plaintext, tartea, associated_data, ad_len, NULL, nonce, key); // Encrypt the plaintext
+          
+           AES_GCM_encrypt(plaintext, tartea, nonce, CRYPTO_NPUBBYTES, key, associated_data, ad_len, ciphertext);
             clock_gettime(CLOCK_MONOTONIC_RAW, &end);                                                                              // End time for encryption
 
             if (i >= 100)
@@ -100,7 +103,7 @@ int main(int argc, char *argv[])
 
             // Measure decryption time
             clock_gettime(CLOCK_MONOTONIC_RAW, &begin);                                                                                     // Start time for decryption
-            crypto_aead_decrypt(decrypted, &decrypted_len, NULL, ciphertext, ciphertext_len, associated_data, ad_len, nonce, key); // Decrypt the ciphertext
+          result=  AES_GCM_decrypt(ciphertext, ciphertext_len, nonce, CRYPTO_NPUBBYTES, key, associated_data, ad_len, decrypted); // Decrypt the ciphertext
             clock_gettime(CLOCK_MONOTONIC_RAW, &end);                                                                                       // End time for decryption
 
             if (i >= 100)
@@ -123,6 +126,10 @@ int main(int argc, char *argv[])
         printf("\n");
 
         
+       if (result == 0)
+       {
+         printf("Decryption failed\n");
+       }
        
       
 

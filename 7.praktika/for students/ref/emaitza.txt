@@ -1,0 +1,24 @@
+Plaintext 17B izanik: 
+Encryption time = 0.158 us
+Decryption time = 0.167 us
+
+Plaintext 102KiB izanik: 
+Encryption time = 190.582 us
+Decryption time = 190.076 us
+
+Plaintext 204KiB izanik: 
+Encryption time = 571.973 us
+Decryption time = 569.718 us
+
+Plaintext 307KiB izanik: 
+Encryption time = 1142.405 us
+Decryption time = 1137.336 us
+
+Plaintext 409KiB izanik: 
+Encryption time = 1900.116 us
+Decryption time = 1891.546 us
+
+Plaintext 511KiB izanik: 
+Encryption time = 2849.267 us
+Decryption time = 2835.217 us
+
